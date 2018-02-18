@@ -8,12 +8,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import twitter4j.HashtagEntity;
 import twitter4j.IDs;
@@ -32,6 +34,10 @@ import twitter4j.auth.AccessToken;
  * @author owais.hussain@irdresearch.org
  */
 public class TwitterMain {
+	private static String CONSUMER_KEY = "my_consumer_key";
+	private static String CONSUMER_SECRET = "my_consumer_secret";
+	private static String CONSUMER_TOKEN = "my_consumer_token";
+	private static String CONSUMER_TOKEN_SECRET = "my_consumer_token_secret";
 
 	private static Twitter twitter;
 
@@ -42,12 +48,13 @@ public class TwitterMain {
 	private static boolean fetchTweets = false;
 	private static boolean fetchFriends = false;
 
-	public static void main(String[] args) throws InterruptedException {
-
+	public static void main(String[] args) throws InterruptedException, IOException {
+		// Read application properties
+		readProperties("twitter.properties");
 		// Check arguments
 		if (args != null) {
 			readArguments(args);
-		}		
+		}
 		
 		TwitterFactory factory = new TwitterFactory();
 		twitter = factory.getInstance();
@@ -95,6 +102,21 @@ public class TwitterMain {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param fileName
+	 * @throws IOException
+	 */
+	private static void readProperties(String fileName) throws IOException {
+		URL file = ClassLoaderUtil.getResource(fileName, TwitterMain.class);
+		file.getFile();
+		Properties prop = new Properties();
+		prop.load(file.openStream());
+		CONSUMER_KEY = prop.getProperty("consumer_key");
+		CONSUMER_SECRET = prop.getProperty("consumer_secret");
+		CONSUMER_TOKEN = prop.getProperty("consumer_token");
+		CONSUMER_TOKEN_SECRET = prop.getProperty("consumer_token_secret");
 	}
 
 	/**
