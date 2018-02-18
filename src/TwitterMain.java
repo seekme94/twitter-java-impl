@@ -32,10 +32,6 @@ import twitter4j.auth.AccessToken;
  * @author owais.hussain@irdresearch.org
  */
 public class TwitterMain {
-	private static final String CONSUMER_KEY = "my_consumer_key";
-	private static final String CONSUMER_SECRET = "my_consumer_secret";
-	private static final String CONSUMER_TOKEN = "my_consumer_token";
-	private static final String CONSUMER_TOKEN_SECRET = "my_consumer_token_secret";
 
 	private static Twitter twitter;
 
@@ -55,8 +51,8 @@ public class TwitterMain {
 		
 		TwitterFactory factory = new TwitterFactory();
 		twitter = factory.getInstance();
-		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-		AccessToken accessToken = new AccessToken(CONSUMER_TOKEN, CONSUMER_TOKEN_SECRET);
+		twitter.setOAuthConsumer(Secret.CONSUMER_KEY, Secret.CONSUMER_SECRET);
+		AccessToken accessToken = new AccessToken(Secret.CONSUMER_TOKEN, Secret.CONSUMER_TOKEN_SECRET);
 		twitter.setOAuthAccessToken(accessToken);
 		TwitterMain twitterMain = new TwitterMain();
 		
@@ -261,8 +257,8 @@ public class TwitterMain {
 	}
 
 	public void writeTweets(String queryString) throws TwitterException, InterruptedException {
-		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-		AccessToken accessToken = new AccessToken(CONSUMER_TOKEN, CONSUMER_TOKEN_SECRET);
+		twitter.setOAuthConsumer(Secret.CONSUMER_KEY, Secret.CONSUMER_SECRET);
+		AccessToken accessToken = new AccessToken(Secret.CONSUMER_TOKEN, Secret.CONSUMER_TOKEN_SECRET);
 		twitter.setOAuthAccessToken(accessToken);
 
 		ArrayList<String> tweets = new ArrayList<String>();
