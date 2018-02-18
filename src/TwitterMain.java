@@ -81,7 +81,7 @@ public class TwitterMain {
 		if (fetchTweets) {
 			for (String name : screenNames) {
 				try {
-					for (int p = 10; p <= 20; p++) {
+					for (int p = 1; p <= 20; p++) {
 						Paging paging = new Paging(p);
 						ResponseList<Status> timeline = twitter.getUserTimeline(name, paging);
 						String[] content = convertRawTweets(timeline, true);
