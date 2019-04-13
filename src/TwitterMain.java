@@ -42,10 +42,10 @@ public class TwitterMain {
 	private static Twitter twitter;
 
 	private static String saveFilePath = "savefile.csv";
-	private static String screenNamesFilePath = "screennamesfile.txt"; // 1 line per name
+	private static String screenNamesFilePath = "res/screennamesfile.txt"; // 1 line per name
 	private static boolean appendFile = true;
 	private static int delay = 2000; // delay between calls
-	private static boolean fetchTweets = false;
+	private static boolean fetchTweets = true;
 	private static boolean fetchFriends = false;
 
 	public static void main(String[] args) throws InterruptedException, IOException {
@@ -55,14 +55,14 @@ public class TwitterMain {
 		if (args != null) {
 			readArguments(args);
 		}
-		
+
 		TwitterFactory factory = new TwitterFactory();
 		twitter = factory.getInstance();
 		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		AccessToken accessToken = new AccessToken(CONSUMER_TOKEN, CONSUMER_TOKEN_SECRET);
 		twitter.setOAuthAccessToken(accessToken);
 		TwitterMain twitterMain = new TwitterMain();
-		
+
 		// Read screen names from file
 		List<String> screenNames = twitterMain.readLines(screenNamesFilePath);
 
@@ -89,9 +89,7 @@ public class TwitterMain {
 						Thread.sleep(delay);
 					}
 				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
 				} catch (TwitterException e) {
-					e.printStackTrace();
 					// In case of rate limit exception, delay for the time said
 					if (e.getStatusCode() == 401) {
 						int timeInSeconds = e.getRateLimitStatus().getSecondsUntilReset();
@@ -146,40 +144,35 @@ public class TwitterMain {
 			content.add(
 					"tweet_id,user_id,screen_name,text,hashtags,retweet,retweeted,location,reply_to_screen_name,lang,timestamp,fav_count,rt_count");
 		for (Status status : timeline) {
-			try {
-				StringBuilder sb = new StringBuilder();
-				sb.append("\"" + status.getId() + "\",");
-				sb.append("\"" + status.getUser().getId() + "\",");
-				sb.append("\"" + status.getUser().getScreenName() + "\",");
-				sb.append("\"" + status.getText().replace("\n", " ").replace('"', '\'') + "\",");
-				// Get ; separated hash tags
-				HashtagEntity[] hashtagEntities = status.getHashtagEntities();
-				String hashtags = "";
-				for (HashtagEntity hashtag : hashtagEntities) {
-					hashtags += hashtag.getText() + ";";
-				}
-				sb.append("\"" + hashtags + "\",");
-				sb.append("\"" + status.isRetweet() + "\",");
-				sb.append("\"" + status.isRetweeted() + "\",");
-				sb.append("\"" + (status.getPlace() == null ? "" : status.getPlace().getCountryCode()) + "\",");
-				sb.append("\"" + status.getInReplyToScreenName() + "\",");
-				sb.append("\"" + status.getLang() + "\",");
-				sb.append("\"" + status.getCreatedAt().getTime() + "\",");
-				sb.append("\"" + status.getFavoriteCount() + "\",");
-				sb.append("\"" + status.getRetweetCount() + "\"");
-				content.add(sb.toString());
-				System.out.println(sb.toString());
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			StringBuilder sb = new StringBuilder();
+			sb.append("\"" + status.getId() + "\",");
+			sb.append("\"" + status.getUser().getId() + "\",");
+			sb.append("\"" + status.getUser().getScreenName() + "\",");
+			sb.append("\"" + status.getText().replace("\n", " ").replace('"', '\'') + "\",");
+			// Get ; separated hash tags
+			HashtagEntity[] hashtagEntities = status.getHashtagEntities();
+			String hashtags = "";
+			for (HashtagEntity hashtag : hashtagEntities) {
+				hashtags += hashtag.getText() + ";";
 			}
+			sb.append("\"" + hashtags + "\",");
+			sb.append("\"" + status.isRetweet() + "\",");
+			sb.append("\"" + status.isRetweeted() + "\",");
+			sb.append("\"" + (status.getPlace() == null ? "" : status.getPlace().getCountryCode()) + "\",");
+			sb.append("\"" + status.getInReplyToScreenName() + "\",");
+			sb.append("\"" + status.getLang() + "\",");
+			sb.append("\"" + status.getCreatedAt().getTime() + "\",");
+			sb.append("\"" + status.getFavoriteCount() + "\",");
+			sb.append("\"" + status.getRetweetCount() + "\"");
+			content.add(sb.toString());
+			System.out.println(sb.toString());
 		}
 		return content.toArray(new String[] {});
 	}
 
 	/**
-	 * This method generates data set of users using Snowball sampling and
-	 * returns a Map of users as keys and list of respective friends
+	 * This method generates data set of users using Snowball sampling and returns a
+	 * Map of users as keys and list of respective friends
 	 * 
 	 * @param starter
 	 *            user object from which to start sampling
@@ -187,8 +180,8 @@ public class TwitterMain {
 	 *            the degree of freedom to which sample is to be collected, e.g.
 	 *            friends of friends of user is degree 2
 	 * @param maxFriends
-	 *            maximum number of total friends to fetch per user. Pass -1 for
-	 *            no limit
+	 *            maximum number of total friends to fetch per user. Pass -1 for no
+	 *            limit
 	 * @throws TwitterException
 	 * @throws InterruptedException
 	 */
@@ -328,7 +321,7 @@ public class TwitterMain {
 		try {
 			in = new BufferedReader(new FileReader(filePath));
 			String line = "";
-			while((line = in.readLine()) != null) {
+			while ((line = in.readLine()) != null) {
 				content.add(line);
 			}
 			if (in != null) {
@@ -339,7 +332,6 @@ public class TwitterMain {
 		}
 		return content;
 	}
-
 
 	public void writeCsv(String filePath, String[] content, boolean append, boolean firstRowHeader) {
 		File f = new File(filePath);
