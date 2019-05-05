@@ -1,3 +1,4 @@
+package com.twitter.util;
 /*
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
